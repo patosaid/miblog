@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "mi-blog"
+  title: "Patricio Said"
   navbar:
     right:
       - about.qmd
