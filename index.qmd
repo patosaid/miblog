@@ -1,5 +1,5 @@
 ---
-title: "Patricio Said"
+title: "Sobre mi"
 image: profile.jpg
 about:
   template: jolla
@@ -10,15 +10,10 @@ about:
     - icon: instagram
       text: Instagram
       href: https://instagram.com/patosaid.cl
-    - icon: github
-      text: Github
-      href: https://github.com/patosaid
     - text: Email
       icon: envelope
       url: "mailto:psaidp2@gmail.com"
 ---
-
-## Sobre mi 
 
 ¡Hola! Soy **Patricio Said**, Ingeniero Civil Industrial con diplomado en Big Data y Machine Learning. Me apasiona la programación y el análisis de datos, utilizar la tecnología para mejorar la eficiencia de los procesos y tomar decisiones informadas.
 

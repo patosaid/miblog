@@ -2,16 +2,16 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Patricio Said",
+    "title": "Sobre mi",
     "section": "",
     "text": "¡Hola! Soy Patricio Said, Ingeniero Civil Industrial con diplomado en Big Data y Machine Learning. Me apasiona la programación y el análisis de datos, utilizar la tecnología para mejorar la eficiencia de los procesos y tomar decisiones informadas.\nFuera del mundo de los datos, disfruto cocinar la auténtica pizza napolitana y pintar al óleo. En esta página encontrarás algunos de mis proyectos favoritos de ciencia de datos."
   },
   {
     "objectID": "posts/post-with-code/index.html",
     "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
+    "title": "Creando plano para mostrar el área geográfica de un estudio con estilo paper",
     "section": "",
-    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
+    "text": "Es común mostrar dentro de la metodología de un trabajo el área geográfica de donde se realizó el estudio. Si no estas familiarizado con datos espaciales, aquí te muestro una alternativa de cómo mostrar la zona de estudio (en lugar de ir a GoogleMaps y sacar una screenshot).\nPrimero cargamos las librerias, readr para importar los datos y ggplot2 para graficar.\n\nlibrary(readr)\nlibrary(ggplot2)\n\nSegún la zona que deseas mostrar y el nivel de detalle (por ejemplo los límite de los estados/regiones o nombres de ciudades) requerirás de determinadas fuentes de datos. Los paquetes ggmap y rnaturalearth incluyen conjuntos de datos para plotear el mundo con los límites internacionales, pero a nivel de estado solo está disponible para Estados Unidos. Por lo anterior, en este post trabajo con los datos de GADM.\nPara este ejemplo, trabajo con datos de Chile en formato sf provenientes de https://www.gadm.org/download_country_v3.html. Puedes descargar los datos para otro país cambiando la URL del siguiente código.\nDescargamos los datos y graficamos:\n\ncl &lt;- readRDS(url(\"https://geodata.ucdavis.edu/gadm/gadm3.6/Rsf/gadm36_CHL_1_sf.rds\", \"rb\"))\n#class(cl) sf\n\nggplot(data = cl) +\n  geom_sf()\n\nold-style crs object detected; please recreate object with a recent sf::st_crs()\nold-style crs object detected; please recreate object with a recent sf::st_crs()\nold-style crs object detected; please recreate object with a recent sf::st_crs()\n\n\n\n\n\n\n\n\n\nYa tenemos el mapa completo de Chile y con sus regiones delimitadas. Para este ejemplo voy a determinar la zona de estudio desde la Región del Maule hasta la Región de los Ríos, pero tambíen quiero mostrar los alrededores para que el lector pueda ubicarse. Para esto voy a cambiar los límites de la gráfica, de manera de hacer un “zoom” en el mapa. Los límites de la gráfica se pueden modificar filtrando el conjunto de datos según las regiones que queremos mostrar o modificar los parámetros xlim y ylim con un par de coordenadas. Esta última alternativa es más artesanal pero también una solución simple si no tienes experiencia con objetos sf.\nEl par de coordenadas las puedes obtener desde OpenStreetMap o GoogleMaps.\n\nEl límite superior lo determiné en la coordenada (-27,-80) y el inferior en (-42,-67). En ggplot() queda de la siguiente forma:\n\nggplot(data = cl) +\n  geom_sf(fill =\"white\")+\n  coord_sf(xlim = c(-67, -80), ylim = c(-42, -27))\n\nold-style crs object detected; please recreate object with a recent sf::st_crs()\nold-style crs object detected; please recreate object with a recent sf::st_crs()\nold-style crs object detected; please recreate object with a recent sf::st_crs()\n\n\n\n\n\n\n\n\n\nCon geom_rect() dibujo un rectángulo:\n\nggplot(data = cl) +\n  geom_sf(fill =\"white\")+\n  coord_sf(xlim = c(-67, -80), ylim = c(-42, -27))+\n  geom_rect(xmin = -74.8, xmax = -70, ymin = -40.65, ymax = -34.7, \n            fill = NA, colour = \"black\", size = 1)\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\n\nold-style crs object detected; please recreate object with a recent sf::st_crs()\nold-style crs object detected; please recreate object with a recent sf::st_crs()\nold-style crs object detected; please recreate object with a recent sf::st_crs()\nold-style crs object detected; please recreate object with a recent sf::st_crs()\n\n\n\n\n\n\n\n\n\nPara finalizar, con la librería ggspatial y su función annotation_north_arrow() se puede incluir una flecha. Y de manera rústica agrego manualmente algunos nombres de ciudades de referencia por medio de la función annotate().\n\nlibrary(ggspatial)\nggplot(data = cl) +\n  geom_sf(fill = \"white\") +\n  annotation_scale(location = \"bl\", width_hint = 0.7) +  # añadir barra de escala\n  annotation_north_arrow(location = \"bl\", which_north = \"true\",  # añadir flecha\n                         pad_x = unit(0, \"in\"), pad_y = unit(0.3, \"in\"),\n                         style = north_arrow_fancy_orienteering) +\n  coord_sf(xlim = c(-67, -80), ylim = c(-42, -28))+  #limite del mapa \n  geom_rect(xmin = -74.8, xmax = -70, ymin = -40.65, ymax = -34.7,  # añado un rectángulo de bordes negros\n            fill = NA, colour = \"black\", size = 1)+\n  annotate(geom = \"text\", label = \"O c é a n o   P a c í f i c o\",  # agrego texto para indicar zonas\n           x = -79, y = -34, fontface = \"italic\",\n           color = \"grey22\", size = 4, angle = 90)+\n  annotate(geom = \"text\", label = \"Coquimbo\",   # agrego ciudades\n           x = -71.34, y = -29.9,\n           color = \"grey22\", size = 3)+\n  annotate(geom = \"text\", label = \"Santiago\",  \n           x = -69.60, y = -33.43,\n           color = \"grey22\", size = 3)+\n  annotate(geom = \"text\", label = \"Los Ángeles\", \n           x = -71.24, y = -37.46,\n           color = \"grey22\", size = 3)+\n  annotate(geom = \"text\", label = \"Zona de estudio\",  \n           x = -75.4, y = -37.675, fontface = c(\"bold\"), angle = 90,\n           color = \"grey22\", size = 3)+\n  xlab(\"Longitud\") + ylab(\"Latitud\")+ # título  de los ejes\n  theme_bw()\n\n\n\n\n\n\n\n\nGuardamos la gráfica con ggsave():\n\nggsave(\"mapa.png\", width = 6, height = 8, dpi = \"screen\")\n\nTambién puedes mostrar el área de estudio de manera interactiva y simple mediante Leaftle:\n\nlibrary(leaflet)\nleaflet() %&gt;% addTiles() %&gt;% \n  setView(-77.344, -34.597, zoom = 5) %&gt;% \n    addRectangles(\n    lng1= -74.575, lat1=-34.886,  \n    lng2= -70.192, lat2=-40.830, \n    fillColor = \"transparent\") %&gt;% \n  addProviderTiles(providers$Stamen.Toner)"
   },
   {
     "objectID": "about.html",
@@ -21,18 +21,11 @@
     "text": "About this blog"
   },
   {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "",
-    "text": "Hola, este es mi primer post :)\nEste post tiene el objetivo de guardar y mostrar ordenadamente las fuentes de recursos que todo principiante en el mundo de R debiese conocer. Obviamente no nombraré todos los paquetes o libros que existen en torno a R, pero si los lugares donde dar los primeros pasos.\nEste compilado está inspirado en https://awesome-r.com/ (revísalo)."
-  },
-  {
     "objectID": "blog.html",
     "href": "blog.html",
     "title": "Blog",
     "section": "",
-    "text": "Post With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n17 oct 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nHola mundo, mi primer post - material R\n\n\n\n\n\n\nr\n\n\nrecursos\n\n\n\n\n\n\n\n\n\n19 sept 2019\n\n\nPatricio Said\n\n\n\n\n\n\n\n\n\n\n\n\nHola mundo, mi primer post - material R\n\n\n\n\n\n\nr\n\n\nrecursos\n\n\n\n\n\n\n\n\n\n19 sept 2019\n\n\nPatricio Said\n\n\n\n\n\n\nNo hay resultados"
+    "text": "Creando plano para mostrar el área geográfica de un estudio con estilo paper\n\n\n\n\n\n\nggplot2\n\n\nmapa\n\n\n\n\n\n\n\n\n\n21 sept 2019\n\n\nPatricio Said\n\n\n\n\n\n\n\n\n\n\n\n\nHola mundo, mi primer post - material R\n\n\n\n\n\n\nr\n\n\nrecursos\n\n\n\n\n\n\n\n\n\n19 sept 2019\n\n\nPatricio Said\n\n\n\n\n\n\nNo hay resultados"
   },
   {
     "objectID": "index.html#sobre-mi",
@@ -40,69 +33,6 @@
     "title": "Patricio Said",
     "section": "",
     "text": "¡Hola! Soy Patricio Said, Ingeniero Civil Industrial con diplomado en Big Data y Machine Learning. Me apasiona la programación y el análisis de datos, utilizar la tecnología para mejorar la eficiencia de los procesos y tomar decisiones informadas.\nFuera del mundo de los datos, disfruto cocinar la auténtica pizza napolitana y pintar al óleo. En esta página encontrarás algunos de mis proyectos favoritos de ciencia de datos."
-  },
-  {
-    "objectID": "posts/welcome/index.html#instalar-r",
-    "href": "posts/welcome/index.html#instalar-r",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "Instalar R",
-    "text": "Instalar R\n(No está de más decir que se debe instalar R desde páginas oficiales)\n\nR (base): https://cran.rstudio.com/\nRStudio: https://www.rstudio.com/products/rstudio/download/"
-  },
-  {
-    "objectID": "posts/welcome/index.html#paquetes-package",
-    "href": "posts/welcome/index.html#paquetes-package",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "Paquetes :package:",
-    "text": "Paquetes :package:\n\nLuego de la instalación de R, knitr y rmarkdown te ayudan a la generenación de documentos dinámicos.\ntidyverse, contenedor de varios paquetes, estos son algunos:\n\nreadr, para importar datos tabulados a R.\ndplyr, manipulación de datos.\ntidyr, cambiar la forma de los datos.\nstringr, trabajar con carácteres.\nlubridate, trabajar con fechas.\nmagrittr, uso de la pipa (%&gt;%).\nggplot2, para creación de gráficas.\n\ndata.table, manipulación rápida de gran cantidad de datos.\nPara la creación de gráficas interactivas:\n\nhighcharter, gráficos basados en Highcharts.\ndygraphs, para series de tiempo.\nplotly, gráficas interactivas con plotly.\nleaflet, mapas interactivos.\nhtmlwidgets, javascript para visualizar datos en R. (revisa los casos de usos, son inspiradores).\n\nshiny, para creación de aplicaciones web. (Ver awesome-rshiny para más recursos en shiny).\nkableExtra, mostrar tablas en formato latex y HTML.\n\nLos paquetes nombrados son los más básicos y con ellos se pueden hacer muchas cosas. Revisa Awesome-R, hay paquetes para todo… conectarse a bases de datos, API’s para extraer datos de páginas webs, optimización de problemas no lineales, análisis de datos espaciales, machine learning etc."
-  },
-  {
-    "objectID": "posts/welcome/index.html#libros-books",
-    "href": "posts/welcome/index.html#libros-books",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "Libros :books:",
-    "text": "Libros :books:\n\nR for Data Science (empeza por este!, lo están traduciendo al español: https://es.r4ds.hadley.nz/)\nAn Introduction to R\nColección de libros gratis en: https://cran.r-project.org/other-docs.html\nR Cookbook\nAdvanced R\nR Markdown: The Definitive Guide\nUC Business Analytics R Programming Guide\nData Wrangling with R\nBuilding Big Shiny Apps - A Workflow\nGeocomputation with R\n\n\nOtros libros de interés:\n\nBusiness Analytics with R\nPractical R for Mass Communication and Journalism\nMachine Learning with R and H2O\nFundamentals of Data Visualization\nBasic R for Finance\nR para profesionales de los datos: una introducción\nCiencia de Datos para Gente Sociable R en ciencias sociales\nStatistical Inference via Data Science"
-  },
-  {
-    "objectID": "posts/welcome/index.html#cheat-sheets-bookmark_tabs",
-    "href": "posts/welcome/index.html#cheat-sheets-bookmark_tabs",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "Cheat Sheets :bookmark_tabs:",
-    "text": "Cheat Sheets :bookmark_tabs:\n(Las chuletas o torpedos, resúmenes con las funciones más importantes de algunos paquetes, ver https://www.rstudio.com/resources/cheatsheets/)\n\nRStudio IDE\nBase R\nRMarkdown\nData Wrangling\nData Visualization con ggplot2\nInteractive Web Apps with shiny\nData import\nCiencia de datos en R con sparklyr\nRepo de cheatsheets"
-  },
-  {
-    "objectID": "posts/welcome/index.html#r-en-twitter",
-    "href": "posts/welcome/index.html#r-en-twitter",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "R en Twitter",
-    "text": "R en Twitter\nTambién, si quieres estar al tanto de las novedades en R te aconsejo seguir a las siguientes cuentas (personalmente no uso RRSS, pero en twitter he encontrado información muy valiosa de la comunidad de R):\n\nR4DScommunity o R for Data Science.\ntidypod Podcast sobre visualización.\nR4DS_es, R más accesible en Latinoamérica, impulsan #DatosDeMiercoles\nLatinR, la comunidad Latina en R.\nRLadiesGlobal.\n\nDe igual forma te recomiendo seguir a los autores de los libros y paquetes que nombré arriba, como por ejemplo a Hadley Wickham autor del libro R for Data Science y desarrollador de la librería tidyverse, o Riva Quiroga exponente de la comunidad R en latinoamérica.\nTe recomiendo participar en Datos de miércoles, la versión en español de #tidytuesday, donde cada semana suben datos para que diferentes usuarios puedan compartir sus visualizaciones. He visto aportes increíbles!, es una buena oportunidad para compartir y conocer el trabajo de otros usuarios de R."
-  },
-  {
-    "objectID": "posts/welcome/index.html#nota-actualizar",
-    "href": "posts/welcome/index.html#nota-actualizar",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "Nota: Actualizar",
-    "text": "Nota: Actualizar\n(Post realizado en 2019, actualizar enlaces, agregar nuevos recursos)\n\nhttps://dreamrs.github.io/esquisse/articles/get-started.html\nhttps://smach.github.io/R4JournalismBook/HowDoI.html\nhttps://www.dreamrs.fr/\nhttps://cedricscherer.netlify.com/\nhttps://yintingchou.com/\nhttps://deanattali.com/blog/building-shiny-apps-tutorial/\nhttps://blog.rstudio.com/2018/02/06/tensorflow-for-r/\n\nhttps://www.brodrigues.co/\nhttp://www.nathancunn.com/\nhttps://bitsandbricks.github.io/\n\nhttp://www.thertrader.com/\n\nhttps://www.r-spatial.org/\n\nhttp://blog.danwin.com/"
-  },
-  {
-    "objectID": "posts/welcome/index.html#paquetes",
-    "href": "posts/welcome/index.html#paquetes",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "Paquetes",
-    "text": "Paquetes\n\nLuego de la instalación de R, knitr y rmarkdown te ayudan a la generenación de documentos dinámicos.\ntidyverse, contenedor de varios paquetes, estos son algunos:\n\nreadr, para importar datos tabulados a R.\ndplyr, manipulación de datos.\ntidyr, cambiar la forma de los datos.\nstringr, trabajar con carácteres.\nlubridate, trabajar con fechas.\nmagrittr, uso de la pipa (%&gt;%).\nggplot2, para creación de gráficas.\n\ndata.table, manipulación rápida de gran cantidad de datos.\nPara la creación de gráficas interactivas:\n\nhighcharter, gráficos basados en Highcharts.\ndygraphs, para series de tiempo.\nplotly, gráficas interactivas con plotly.\nleaflet, mapas interactivos.\nhtmlwidgets, javascript para visualizar datos en R. (revisa los casos de usos, son inspiradores).\n\nshiny, para creación de aplicaciones web. (Ver awesome-rshiny para más recursos en shiny).\nkableExtra, mostrar tablas en formato latex y HTML.\n\nLos paquetes nombrados son los más básicos y con ellos se pueden hacer muchas cosas. Revisa Awesome-R, hay paquetes para todo… conectarse a bases de datos, API’s para extraer datos de páginas webs, optimización de problemas no lineales, análisis de datos espaciales, machine learning etc."
-  },
-  {
-    "objectID": "posts/welcome/index.html#libros",
-    "href": "posts/welcome/index.html#libros",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "Libros",
-    "text": "Libros\n\nR for Data Science (empeza por este!, lo están traduciendo al español: https://es.r4ds.hadley.nz/)\nAn Introduction to R\nColección de libros gratis en: https://cran.r-project.org/other-docs.html\nR Cookbook\nAdvanced R\nR Markdown: The Definitive Guide\nUC Business Analytics R Programming Guide\nData Wrangling with R\nBuilding Big Shiny Apps - A Workflow\nGeocomputation with R\n\n\nOtros libros de interés:\n\nBusiness Analytics with R\nPractical R for Mass Communication and Journalism\nMachine Learning with R and H2O\nFundamentals of Data Visualization\nBasic R for Finance\nR para profesionales de los datos: una introducción\nCiencia de Datos para Gente Sociable R en ciencias sociales\nStatistical Inference via Data Science"
-  },
-  {
-    "objectID": "posts/welcome/index.html#cheat-sheets",
-    "href": "posts/welcome/index.html#cheat-sheets",
-    "title": "Hola mundo, mi primer post - material R",
-    "section": "Cheat Sheets",
-    "text": "Cheat Sheets\n(Las chuletas o torpedos, resúmenes con las funciones más importantes de algunos paquetes, ver https://www.rstudio.com/resources/cheatsheets/)\n\nRStudio IDE\nBase R\nRMarkdown\nData Wrangling\nData Visualization con ggplot2\nInteractive Web Apps with shiny\nData import\nCiencia de datos en R con sparklyr\nRepo de cheatsheets"
   },
   {
     "objectID": "posts/primer-post/index.html",
@@ -149,6 +79,55 @@
   {
     "objectID": "posts/primer-post/index.html#nota-actualizar",
     "href": "posts/primer-post/index.html#nota-actualizar",
+    "title": "Hola mundo, mi primer post - material R",
+    "section": "Nota: Actualizar",
+    "text": "Nota: Actualizar\n(Post realizado en 2019, actualizar enlaces, agregar nuevos recursos)\n\nhttps://dreamrs.github.io/esquisse/articles/get-started.html\nhttps://smach.github.io/R4JournalismBook/HowDoI.html\nhttps://www.dreamrs.fr/\nhttps://cedricscherer.netlify.com/\nhttps://yintingchou.com/\nhttps://deanattali.com/blog/building-shiny-apps-tutorial/\nhttps://blog.rstudio.com/2018/02/06/tensorflow-for-r/\n\nhttps://www.brodrigues.co/\nhttp://www.nathancunn.com/\nhttps://bitsandbricks.github.io/\n\nhttp://www.thertrader.com/\n\nhttps://www.r-spatial.org/\n\nhttp://blog.danwin.com/"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Hola mundo, mi primer post - material R",
+    "section": "",
+    "text": "Hola, este es mi primer post :)\nEste post tiene el objetivo de guardar y mostrar ordenadamente las fuentes de recursos que todo principiante en el mundo de R debiese conocer. Obviamente no nombraré todos los paquetes o libros que existen en torno a R, pero si los lugares donde dar los primeros pasos.\nEste compilado está inspirado en https://awesome-r.com/ (revísalo)."
+  },
+  {
+    "objectID": "posts/welcome/index.html#instalar-r",
+    "href": "posts/welcome/index.html#instalar-r",
+    "title": "Hola mundo, mi primer post - material R",
+    "section": "Instalar R",
+    "text": "Instalar R\n(No está de más decir que se debe instalar R desde páginas oficiales)\n\nR (base): https://cran.rstudio.com/\nRStudio: https://www.rstudio.com/products/rstudio/download/"
+  },
+  {
+    "objectID": "posts/welcome/index.html#paquetes",
+    "href": "posts/welcome/index.html#paquetes",
+    "title": "Hola mundo, mi primer post - material R",
+    "section": "Paquetes",
+    "text": "Paquetes\n\nLuego de la instalación de R, knitr y rmarkdown te ayudan a la generenación de documentos dinámicos.\ntidyverse, contenedor de varios paquetes, estos son algunos:\n\nreadr, para importar datos tabulados a R.\ndplyr, manipulación de datos.\ntidyr, cambiar la forma de los datos.\nstringr, trabajar con carácteres.\nlubridate, trabajar con fechas.\nmagrittr, uso de la pipa (%&gt;%).\nggplot2, para creación de gráficas.\n\ndata.table, manipulación rápida de gran cantidad de datos.\nPara la creación de gráficas interactivas:\n\nhighcharter, gráficos basados en Highcharts.\ndygraphs, para series de tiempo.\nplotly, gráficas interactivas con plotly.\nleaflet, mapas interactivos.\nhtmlwidgets, javascript para visualizar datos en R. (revisa los casos de usos, son inspiradores).\n\nshiny, para creación de aplicaciones web. (Ver awesome-rshiny para más recursos en shiny).\nkableExtra, mostrar tablas en formato latex y HTML.\n\nLos paquetes nombrados son los más básicos y con ellos se pueden hacer muchas cosas. Revisa Awesome-R, hay paquetes para todo… conectarse a bases de datos, API’s para extraer datos de páginas webs, optimización de problemas no lineales, análisis de datos espaciales, machine learning etc."
+  },
+  {
+    "objectID": "posts/welcome/index.html#libros",
+    "href": "posts/welcome/index.html#libros",
+    "title": "Hola mundo, mi primer post - material R",
+    "section": "Libros",
+    "text": "Libros\n\nR for Data Science (empeza por este!, lo están traduciendo al español: https://es.r4ds.hadley.nz/)\nAn Introduction to R\nColección de libros gratis en: https://cran.r-project.org/other-docs.html\nR Cookbook\nAdvanced R\nR Markdown: The Definitive Guide\nUC Business Analytics R Programming Guide\nData Wrangling with R\nBuilding Big Shiny Apps - A Workflow\nGeocomputation with R\n\n\nOtros libros de interés:\n\nBusiness Analytics with R\nPractical R for Mass Communication and Journalism\nMachine Learning with R and H2O\nFundamentals of Data Visualization\nBasic R for Finance\nR para profesionales de los datos: una introducción\nCiencia de Datos para Gente Sociable R en ciencias sociales\nStatistical Inference via Data Science"
+  },
+  {
+    "objectID": "posts/welcome/index.html#cheat-sheets",
+    "href": "posts/welcome/index.html#cheat-sheets",
+    "title": "Hola mundo, mi primer post - material R",
+    "section": "Cheat Sheets",
+    "text": "Cheat Sheets\n(Las chuletas o torpedos, resúmenes con las funciones más importantes de algunos paquetes, ver https://www.rstudio.com/resources/cheatsheets/)\n\nRStudio IDE\nBase R\nRMarkdown\nData Wrangling\nData Visualization con ggplot2\nInteractive Web Apps with shiny\nData import\nCiencia de datos en R con sparklyr\nRepo de cheatsheets"
+  },
+  {
+    "objectID": "posts/welcome/index.html#r-en-twitter",
+    "href": "posts/welcome/index.html#r-en-twitter",
+    "title": "Hola mundo, mi primer post - material R",
+    "section": "R en Twitter",
+    "text": "R en Twitter\nTambién, si quieres estar al tanto de las novedades en R te aconsejo seguir a las siguientes cuentas (personalmente no uso RRSS, pero en twitter he encontrado información muy valiosa de la comunidad de R):\n\nR4DScommunity o R for Data Science.\ntidypod Podcast sobre visualización.\nR4DS_es, R más accesible en Latinoamérica, impulsan #DatosDeMiercoles\nLatinR, la comunidad Latina en R.\nRLadiesGlobal.\n\nDe igual forma te recomiendo seguir a los autores de los libros y paquetes que nombré arriba, como por ejemplo a Hadley Wickham autor del libro R for Data Science y desarrollador de la librería tidyverse, o Riva Quiroga exponente de la comunidad R en latinoamérica.\nTe recomiendo participar en Datos de miércoles, la versión en español de #tidytuesday, donde cada semana suben datos para que diferentes usuarios puedan compartir sus visualizaciones. He visto aportes increíbles!, es una buena oportunidad para compartir y conocer el trabajo de otros usuarios de R."
+  },
+  {
+    "objectID": "posts/welcome/index.html#nota-actualizar",
+    "href": "posts/welcome/index.html#nota-actualizar",
     "title": "Hola mundo, mi primer post - material R",
     "section": "Nota: Actualizar",
     "text": "Nota: Actualizar\n(Post realizado en 2019, actualizar enlaces, agregar nuevos recursos)\n\nhttps://dreamrs.github.io/esquisse/articles/get-started.html\nhttps://smach.github.io/R4JournalismBook/HowDoI.html\nhttps://www.dreamrs.fr/\nhttps://cedricscherer.netlify.com/\nhttps://yintingchou.com/\nhttps://deanattali.com/blog/building-shiny-apps-tutorial/\nhttps://blog.rstudio.com/2018/02/06/tensorflow-for-r/\n\nhttps://www.brodrigues.co/\nhttp://www.nathancunn.com/\nhttps://bitsandbricks.github.io/\n\nhttp://www.thertrader.com/\n\nhttps://www.r-spatial.org/\n\nhttp://blog.danwin.com/"

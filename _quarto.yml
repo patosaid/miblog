@@ -8,10 +8,9 @@ website:
   navbar:
     right:
       - blog.qmd
-      - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
+      - text: Email
+        icon: envelope
+        url: "mailto:psaidp2@gmail.com"
 format:
   html:
     theme: cosmo
