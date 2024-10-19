@@ -1,12 +1,25 @@
 ---
 title: "Patricio Said"
-listing:
-  contents: posts
-  sort: "date desc"
-  type: default
-  categories: true
-  sort-ui: false
-  filter-ui: false
-page-layout: full
-title-block-banner: true
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/patosaid_cl
+    - icon: instagram
+      text: Instagram
+      href: https://instagram.com/patosaid.cl
+    - icon: github
+      text: Github
+      href: https://github.com/patosaid
+    - text: Email
+      icon: envelope
+      url: "mailto:psaidp2@gmail.com"
 ---
+
+## Sobre mi 
+
+¡Hola! Soy **Patricio Said**, Ingeniero Civil Industrial con diplomado en Big Data y Machine Learning. Me apasiona la programación y el análisis de datos, utilizar la tecnología para mejorar la eficiencia de los procesos y tomar decisiones informadas.
+
+Fuera del mundo de los datos, disfruto cocinar la auténtica [pizza napolitana](https://es.wikipedia.org/wiki/Pizza_napolitana) y [pintar al óleo](https://www.instagram.com/p/C_eCqyDy-2A/?img_index=1). En esta página encontrarás algunos de mis proyectos favoritos de ciencia de datos.

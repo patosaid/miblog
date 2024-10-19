@@ -4,7 +4,6 @@ lang: es
 author: "Patricio Said"
 date: "2019-09-19"
 categories: [r , recursos]
-draft: true
 ---
 
 Hola, este es mi primer post :)
@@ -126,3 +125,4 @@ Te recomiendo participar en [Datos de miércoles](https://github.com/cienciadeda
 -   http://blog.danwin.com/
 
 ------------------------------------------------------------------------
+
