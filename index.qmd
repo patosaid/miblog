@@ -15,6 +15,6 @@ about:
       url: "mailto:psaidp2@gmail.com"
 ---
 
-¡Hola! Soy **Patricio Said**, Ingeniero Civil Industrial con diplomado en Big Data y Machine Learning. Me apasiona la programación y el análisis de datos, utilizar la tecnología para mejorar la eficiencia de los procesos y tomar decisiones informadas.
+¡Hola! Soy **Patricio Said**, Ingeniero Civil Industrial, diplomado en Big Data y Machine Learning. Me apasiona la programación y el análisis de datos, utilizar la tecnología para mejorar la eficiencia de los procesos y la toma de decisiones informadas.
 
-Fuera del mundo de los datos, disfruto cocinar la auténtica [pizza napolitana](https://es.wikipedia.org/wiki/Pizza_napolitana) y [pintar al óleo](https://www.instagram.com/p/C_eCqyDy-2A/?img_index=1). En esta página encontrarás algunos de mis proyectos favoritos de ciencia de datos.
+Fuera del mundo de los datos, disfruto cocinar la auténtica [pizza napolitana](https://es.wikipedia.org/wiki/Pizza_napolitana) y [pintar al óleo](https://www.instagram.com/p/C_eCqyDy-2A/?img_index=1). En esta página encontrarás mi [blog](patosaid.cl/blog) con algunos de mis códigos que he utilizado referente a ciencia de datos.
