@@ -1,0 +1,128 @@
+---
+title: Gráfico interactivo de comunas de Chile
+author: Patricio Said
+date: '2019-09-23'
+categories: ["ggplot2","mapa","dplyr", "chilemapas", "sf","leaflet"]
+#image: "img/martini.jpg"
+---
+
+![](print.png){fig-align="center"}
+
+Este es un ejercicio simple para visualizar información por comunas de Chile. A modo de ejemplo se destacarán las comunas que poseen artículos en sus nombres (**La** Serena, **El** Quisco, **Los** Ángeles, **La** Ligua), pero este mismo código se puede aplicar fácilmente visualizar otros tipos de datos (mas interesantes), densidad de población, % desempleo, tasa de crímenes, etc.
+
+Los nombres y polígonos de las comunas de Chile estan disponibles en el paquete `chilemapas` desarrolado por Mauricio Vargas ([Pachá](https://pacha.hk/)). (Hay varias librerías que permiten obtener los detalles de las administraciones territoriales)
+
+El paquete `chilemapas` dispone de varios conjuntos. El conjunto `territorial_codes` contiene los nombres de regiones, provincias y comunas, con sus respectivos id's. Mientras que `regions_map` y `communes_map` contiene los polígonos (en clase `sf`) que servirán para graficar. (Personalmente, esta es la primera vez que trabajo con objetos de clase `sf`, por lo tanto los códigos a continuación son bien ligeros, perfecto para un ejercicio de principiantes).
+
+### Primero cargamos las librerías:
+
+```{r message=F, warning=F}
+library(chilemapas) # para los datos
+library(dplyr) # manipulación
+library(stringr) # y para trabajar con carácteres
+library(ggplot2) # graficas
+library(leaflet) # mapa interactivo
+```
+
+### Los datos
+
+Creo un vector `articulos` que contiene (obviamente) los artículos y la variable `datos` que contiene las columnas de interés del conjunto de datos.
+
+> **Nota:** Puedes replicar este mismo ejercicio pero con otros carácteres, como por ejemplo "San", "Santa", de esta manera ver la influencia de la religión en los nombres de los lugares.
+
+```{r}
+articulos <- c("la", "las", "el", "los")
+datos <- codigos_territoriales %>% select(codigo_comuna, nombre_comuna)
+```
+
+Con `mutate()` creo una columna que contiene la primera palabra de los nombres de las comunas y con `tolower` transformo a minúscula, veamos el resultado con `glimpse`:
+
+```{r}
+datos %>% select(codigo_comuna, nombre_comuna) %>%  
+  mutate(primera_palabra = tolower(str_extract(nombre_comuna, pattern = "\\w+"))) %>% 
+  glimpse
+```
+
+Ahora deseo agregar más información al conjunto. Con `case_when()` creé una columna para el tipo de género del artículo y de la misma forma indentifiqué si es un artículo plural o singular.
+
+```{r}
+datos <- datos %>% select(codigo_comuna, nombre_comuna) %>%  
+  mutate(primera_palabra = tolower(str_extract(nombre_comuna, pattern = "\\w+"))) %>% 
+  mutate(es_articulo = primera_palabra %in% articulos) %>% 
+  mutate(genero = case_when(
+    primera_palabra %in% c("la", "las") ~ "Femenino",
+    primera_palabra %in% c("el", "los") ~ "Masculino")) %>% 
+  mutate(cantidad = case_when(
+    primera_palabra %in% c("las", "los") ~ "Plural",
+    primera_palabra %in% c("el", "la") ~ "Singular" ))
+```
+
+Eso sería toda la parte de manipulación. Veamos un pequeño resumen de los datos con `summarise()`.
+
+### Un pequeño vistazo
+
+De un total de 346 comunas solamente 25 inician con artículo. *(Pocos!!!, pensaba que al menos el 20% comenzaba con artículos...)*. La proporción en el género son casi las mismas, mientras los artículos singulares superan a los plurales.
+
+```{r}
+datos %>% group_by(es_articulo)%>% 
+  summarise( N_articulo = n() , N_femeninos=sum(genero == "Femenino") ,  
+             N_masculinos = sum(genero=="Masculino"),
+             N_singular = sum(cantidad == "Singular"),
+             N_plural = sum(cantidad == "Plural")) 
+```
+
+### Graficando la Región de Coquimbo:
+
+El conjunto `mapa_comunas` contiene los polígonos de las comunas por cada región.
+
+```{r mapa_coquimbo , message=F, warning= F}
+mapa_comunas_sf <- st_as_sf(mapa_comunas)
+coquimbo <- mapa_comunas_sf %>%
+  filter(codigo_region == "04") %>%
+  left_join(
+    codigos_territoriales %>%
+      select(codigo_comuna, nombre_comuna) %>%
+      distinct(),
+    by = "codigo_comuna"  # Asegúrate de especificar la clave de unión correcta
+  ) %>%
+  inner_join(datos)  # Ajusta la clave de unión según corresponda
+
+ggplot(coquimbo) + 
+  geom_sf(aes(fill = es_articulo)) +
+  geom_sf_label(aes(label = nombre_comuna))
+```
+
+### Graficando para todo el país
+
+Para graficar a todo Chile lo haré en un mapa interactivo ya que por la forma que tiene el país se hace difícil ver con claridad el color de cada comuna.
+
+```{r message=F, warning= F}
+chile <- mapa_comunas %>%
+  bind_rows() %>%
+  left_join(
+    codigos_territoriales %>%
+      select(codigo_comuna, nombre_comuna) %>%
+      distinct(),
+    by = "codigo_comuna"  # Asegúrate de que este es el nombre correcto de la clave
+  ) %>%
+  inner_join(datos, by = "nombre_comuna")  # Ajusta la clave de unión según corresponda
+```
+
+En `addPolygons()` por medio el parámetro `popup` especifiqué un vector en formato HTML para que al momento de cliquear sobre las comunas se despliegue un recuadro con información.
+
+```{r mapa_chile1, eval= T, message=F, warning=F}
+chile <- st_as_sf(chile)
+chile <- chile %>% select(-(codigo_provincia :codigo_region ))
+factpal <- colorFactor(heat.colors(3), chile$genero)
+
+
+leaflet() %>% addTiles() %>%  
+  addPolygons(data = chile,
+              color = ~factpal(genero),
+              fillOpacity = 0.8, stroke = FALSE,
+              popup = paste0( 
+                  "Comuna: " , chile$nombre_comuna  , "<br>",
+                  "Género del artículo: ", chile$genero,"<br>",
+                  "Cantidad del artículo: ", chile$cantidad )
+              )
+```
