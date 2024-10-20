@@ -2,13 +2,13 @@
 title: Gráfico interactivo de comunas de Chile
 author: Patricio Said
 date: '2019-09-23'
-categories: ["ggplot2","mapa","dplyr", "chilemapas", "sf","leaflet"]
+categories: ["ggplot2","mapa","dplyr", "chilemapas", "sf","leaflet", "r"]
 #image: "img/martini.jpg"
 ---
 
 ![](print.png){fig-align="center"}
 
-Este es un ejercicio simple para visualizar información por comunas de Chile. A modo de ejemplo se destacarán las comunas que poseen artículos en sus nombres (**La** Serena, **El** Quisco, **Los** Ángeles, **La** Ligua), pero este mismo código se puede aplicar fácilmente visualizar otros tipos de datos (mas interesantes), densidad de población, % desempleo, tasa de crímenes, etc.
+Este es un ejercicio simple para visualizar información por comunas de Chile. A modo de ejemplo, se destacarán las comunas que poseen artículos en sus nombres (**La** Serena, **El** Quisco, **Los** Ángeles, **La** Ligua), pero este mismo código se puede aplicar fácilmente para visualizar otros tipos de datos (más interesantes), densidad poblacional, % desempleo, tasa de crímenes, etc.
 
 Los nombres y polígonos de las comunas de Chile estan disponibles en el paquete `chilemapas` desarrolado por Mauricio Vargas ([Pachá](https://pacha.hk/)). (Hay varias librerías que permiten obtener los detalles de las administraciones territoriales)
 
