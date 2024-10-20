@@ -3,12 +3,12 @@ title: 'Creando plano para mostrar el área geográfica de un estudio con estilo
 author: Patricio Said
 date: '2019-09-21'
 slug: creando-mapa-para-mostrar-la-zona-de-estudio
-categories: ["ggplot2","mapa"]
+categories: ["ggplot2","mapa" , "r"]
 #image: "img/martini.jpg"
 description: ""
 ---
 
-![](mapa.png)
+![](mapa.png){fig-align="center"}
 
 Es común mostrar dentro de la metodología de un trabajo el área geográfica de donde se realizó el estudio. Si no estas familiarizado con datos espaciales, aquí te muestro una alternativa de cómo mostrar la zona de estudio (en lugar de ir a GoogleMaps y sacar una screenshot).
 
@@ -25,7 +25,7 @@ Para este ejemplo, trabajo con datos de Chile en formato sf provenientes de <htt
 
 Descargamos los datos y graficamos:
 
-```{r essage=FALSE , grafica1}
+```{r message=FALSE , grafica1}
 cl <- readRDS(url("https://geodata.ucdavis.edu/gadm/gadm3.6/Rsf/gadm36_CHL_1_sf.rds", "rb"))
 #class(cl) sf
 
@@ -39,7 +39,7 @@ El par de coordenadas las puedes obtener desde OpenStreetMap o GoogleMaps.
 
 El límite superior lo determiné en la coordenada (-27,-80) y el inferior en (-42,-67). En `ggplot()` queda de la siguiente forma:
 
-```{r essage=FALSE , grafica2}
+```{r message=FALSE , grafica2}
 ggplot(data = cl) +
   geom_sf(fill ="white")+
   coord_sf(xlim = c(-67, -80), ylim = c(-42, -27))
@@ -47,7 +47,7 @@ ggplot(data = cl) +
 
 Con `geom_rect()` dibujo un rectángulo:
 
-```{r essage=FALSE, grafica3}
+```{r message=FALSE, grafica3}
 ggplot(data = cl) +
   geom_sf(fill ="white")+
   coord_sf(xlim = c(-67, -80), ylim = c(-42, -27))+
