@@ -5,7 +5,9 @@ lang: es
 
 website:
   title: "Patricio Said"
+  favicon: logo.png
   navbar:
+    logo: logo.png
     right:
       - blog.qmd
       - text: Email
