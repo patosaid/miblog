@@ -1,0 +1,159 @@
+---
+title: "Mostrar tablas estadisticas con kableExtra"
+lang: es
+author: "Patricio Said"
+date: "2019-09-25"
+categories: ["r" , "recursos", "kableExtra" ]
+---
+
+En cualquier trabajo de investigación que involucre una muestra o conjunto de datos es importante mostrar un cuadro resumen que contenga estadísticas descriptivas del conjunto, de esta manera se puede comunicar de forma clara la dimensión de los datos del estudio.
+
+Con solo dos herramientas la construcción de tablas resúmnes resulta muy facil y sencilla. Las funciones de `dplyr` permiten calcular diferentes estadísticas según grupos. Una vez terminada la tabla el paquete `kableExtra` transforma facimente la información de la tabla a formato HTML o Latex (para visualizar en PDF).
+
+## Los datos a usar
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE , message = F, warning = F)
+```
+
+Para este ejemplo utilizo los datos `vuelos` que están dentro del paquete `datos`. `vuelos` es la traducción al español del conjunto `nycflights13::flights`. Este conjunto contiene los datos de los vuelos que despegaron de Nueva York durante el 2013.
+
+```{r}
+library(datos)
+library(tidyverse)
+vuelos
+```
+
+Los datos vienen en formato tibble. De manera de ejemplo y poder probar las agrupaciones de columnas y filas al momento de mostrar la tabla voy a filtrar el conjunto de datos en un rango de tres meses (septiembre a noviembre) y trabajar con los datos de las 3 aerolíneas con más vuelos.
+
+## Preparando los datos
+
+`mayores_aerolineas` guarda las 3 aerolineas con mas vuelos:
+
+```{r}
+mayores_aerolineas <- vuelos %>% select(mes, aerolinea) %>% 
+  filter(mes %in% (9:11)) %>% 
+  group_by( aerolinea) %>% 
+    summarise(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  slice(1:3) %>% 
+  ungroup()
+
+# Busca los nombres  
+aerolineas %>% 
+  filter(aerolinea %in% mayores_aerolineas$aerolinea)
+```
+
+En `datos` guarda los datos a utilizar para este ejemplo.
+
+```{r}
+datos <- vuelos %>% 
+  select(mes, aerolinea, atraso_llegada, atraso_salida) %>% 
+  filter(atraso_salida > 0 , atraso_llegada > 0) %>% 
+  filter(mes >=9, mes <=11) %>% 
+  filter(aerolinea %in% mayores_aerolineas$aerolinea) %>% 
+  arrange(mes)
+datos
+```
+
+De manera de hacer un ejemplo práctico, generalmente en los papers que ajustan modelos de predicción suele mostrarse el conjunto de datos separados en "ajuste" y "prueba". Para esto, el conjunto `datos` se dividió aleatoriamente en proporción 80:20. Luego para cada conjunto se calcularon algunas estadísticas en base a la variable `atraso_llegada`.
+
+```{r}
+datos <- datos %>%  
+  mutate(conjunto = sample(c("train","test"), nrow(datos), replace = T, prob = c(0.8,0.2)))
+
+datos_train <- datos %>% select(mes,aerolinea, conjunto, atraso_llegada) %>% 
+  filter(conjunto == "train") %>% 
+  group_by(mes, aerolinea) %>% 
+  summarise(n_train = n(), 
+            min_llegada_train = min(atraso_llegada),
+            prom_llegada_train = mean(atraso_llegada),
+            max_llegada_train = max(atraso_llegada),
+            sd_llegada_train = sd(atraso_llegada)
+            ) %>% 
+  ungroup()
+
+datos_test <- datos %>% select(mes,aerolinea, conjunto, atraso_llegada) %>% 
+  filter(conjunto == "test") %>% 
+  group_by(mes, aerolinea) %>% 
+  summarise(n_test = n(), 
+            min_llegada_test = min(atraso_llegada),
+            prom_llegada_test = mean(atraso_llegada),
+            max_llegada_test = max(atraso_llegada),
+            sd_llegada_test = sd(atraso_llegada)
+            ) %>% 
+  ungroup()
+```
+
+Luego en `resumen` se guardó la información a mostrar en la tabla.
+
+```{r}
+
+resumen <- left_join(datos_train,datos_test) %>% 
+  mutate(mes = case_when(
+                      mes == 9 ~ "Septiembre",
+                      mes ==10 ~ "Octubre",
+                      mes ==11 ~ "Noviembre")) %>% 
+  left_join(aerolineas) %>% 
+  select(mes, nombre, everything(), - (aerolinea))
+```
+
+Para mostrar la tabla en formato se utilizó la función `kable()` del paquete `kableExtra`. Por defecto el tipo de formato está en HTML. En los nombres de columnas se agregó `<br>` (salto de línea en HTML). Para agrupar filas se podría usar `collapse_rows()` según la variable `mes`.
+
+# Creando tabla
+
+## HTML
+
+```{r}
+library(kableExtra) 
+resumen %>% select(-mes) %>% 
+kable( format = "html", 
+       format.args = list(decimal.mark = ',', big.mark = "."),
+       col.names = ( c("Aerolínea",
+                       rep(c("N","Min.<br>*(minutos)*",
+                             "Media<br>*(minutos)*",
+                             "Max.<br>*(minutos)*",
+                             "D.E<br>*(minutos)*"),
+                           2))), 
+         digits = 1 , escape = F) %>%
+  kable_styling(c("striped"),font_size = 11) %>% 
+  add_header_above(header = c(" "=1, 
+                              "Conjunto entrenamiento (N=6.973)" = 5,
+                              "Conjunto prueba (N=1.715)" = 5 ) ) %>% 
+  pack_rows("Septiembre", 1, 3) %>% 
+  pack_rows("Octubre", 4, 6) %>% 
+  pack_rows("Noviembre", 7,9) %>% 
+   footnote(general = "D.E: Desviación estandar.",
+            footnote_as_chunk = F)
+```
+
+## Latex
+
+Para formato Latex se debe especificar en el argumento `formato = "latex"`. Algunos argumentos son difentes, como en el caso de los saltos en líneas en los nombres:
+
+```{r eval = T}
+resumen %>% select(-mes) %>% 
+ kable( format.args = list(decimal.mark = ',', big.mark = "."),
+        digits = 2, "latex", booktabs= T, linesep="", 
+        escape = F, 
+        caption = "Resumen estadístico",
+        col.names = linebreak( c("Aerolínea",
+                       rep(c("N","Min.\n(minutos",
+                             "Media\n(minutos)",
+                             "Max.\n(minutos)",
+                             "D.E\n(minutos)"),
+                           2)))) %>%
+  kable_styling(latex_options="scale_down") %>% 
+  add_header_above(header = c(" "=1, 
+                              "Conjunto entrenamiento (N=6.973)" = 5,
+                              "Conjunto prueba (N=1.715)" = 5 ) ) %>% 
+  pack_rows("Septiembre", 1, 3) %>% 
+  pack_rows("Octubre", 4, 6) %>% 
+  pack_rows("Noviembre", 7,9) %>% 
+   footnote(symbol = "D.E: Desviación estandar.",
+            footnote_as_chunk = F)
+```
+
+La salida sería algo así:
+
+![](latex.PNG){fig-align="center"}

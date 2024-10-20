@@ -9,6 +9,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/tablas-estadisticas/index.html",
       "/posts/comunas-chile/index.html",
       "/posts/post-with-code/index.html",
       "/posts/welcome/index.html"
