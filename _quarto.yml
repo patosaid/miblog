@@ -4,6 +4,7 @@ project:
 lang: es
 
 website:
+  google-analytics: '{{ env.GA_TRACKING_ID }}'
   title: "Patricio Said"
   favicon: logo.png
   navbar:

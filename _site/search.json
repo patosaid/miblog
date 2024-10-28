@@ -173,5 +173,19 @@
     "title": "Mostrar tablas estadisticas con kableExtra",
     "section": "Latex",
     "text": "Latex\nPara formato Latex se debe especificar en el argumento formato = \"latex\". Algunos argumentos son difentes, como en el caso de los saltos en líneas en los nombres:\n\nresumen %&gt;% select(-mes) %&gt;% \n kable( format.args = list(decimal.mark = ',', big.mark = \".\"),\n        digits = 2, \"latex\", booktabs= T, linesep=\"\", \n        escape = F, \n        caption = \"Resumen estadístico\",\n        col.names = linebreak( c(\"Aerolínea\",\n                       rep(c(\"N\",\"Min.\\n(minutos\",\n                             \"Media\\n(minutos)\",\n                             \"Max.\\n(minutos)\",\n                             \"D.E\\n(minutos)\"),\n                           2)))) %&gt;%\n  kable_styling(latex_options=\"scale_down\") %&gt;% \n  add_header_above(header = c(\" \"=1, \n                              \"Conjunto entrenamiento (N=6.973)\" = 5,\n                              \"Conjunto prueba (N=1.715)\" = 5 ) ) %&gt;% \n  pack_rows(\"Septiembre\", 1, 3) %&gt;% \n  pack_rows(\"Octubre\", 4, 6) %&gt;% \n  pack_rows(\"Noviembre\", 7,9) %&gt;% \n   footnote(symbol = \"D.E: Desviación estandar.\",\n            footnote_as_chunk = F)\n\n\n\n\nLa salida sería algo así:"
+  },
+  {
+    "objectID": "posts/graficas-python/index.html",
+    "href": "posts/graficas-python/index.html",
+    "title": "Graficas en python con estilo",
+    "section": "",
+    "text": "Este es un post de prueba usando python:\n\nx = 1\ny = 2\nprint(x+y)\n\n3"
+  },
+  {
+    "objectID": "posts/gif-terremotos/index.html",
+    "href": "posts/gif-terremotos/index.html",
+    "title": "probando 1",
+    "section": "",
+    "text": "probando 1"
   }
 ]
