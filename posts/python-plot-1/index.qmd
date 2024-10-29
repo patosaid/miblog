@@ -1,0 +1,146 @@
+---
+title: 'Transforma tus gráficos en Python: Técnicas para cambiar estilos y colores'
+author: Patricio Said
+date: '2021-01-12'
+slug: creando-mapa-para-mostrar-la-zona-de-estudio
+categories: ["python","matplotlib" , "seaborn"]
+#image: "img/martini.jpg"
+description: ""
+format:
+  html:
+    toc: true
+draft: false
+---
+
+Hace algunos años 
+
+```{r include=FALSE}
+#library(reticulate)
+#virtualenv_create("myenv")
+#use_virtualenv("myenv", required = TRUE)
+#py_install("matplotlib") 
+#py_install("pandas") 
+#py_install("seaborn") 
+
+```
+
+En este post trabajo
+
+```{python}
+import pandas as pd 
+import matplotlib.pyplot as plt 
+import seaborn as sns
+```
+
+```{python}
+url_1 = "https://drive.google.com/file/d/1chBndOfQob4OY2lUsQPoe3bOZUiixjOa/view?usp=sharing"
+path_1 = 'https://drive.google.com/uc?export=download&id='+url_1.split('/')[-2] 
+df_1 = pd.read_csv(path_1)
+df_1.head()
+```
+
+```{python}
+#| cache: false
+ 
+df = pd.DataFrame.copy(df_1)
+
+f, ax = plt.subplots()
+sns.barplot(y = "Paises" , x = "Contagiados" , data = df ,
+            color = "r", alpha = .8)
+
+plt.show(ax)
+```
+
+```{python}
+df= df.sort_values(by=["Contagiados"], ascending=False )
+df["Contagiados"] = df["Contagiados"]/1000000
+x = df_1["Contagiados"].sum()
+df.head()
+```
+
+```{python}
+#| column: screen
+#| cache: false
+
+plt.rcParams['font.family'] = 'Segoe UI'
+#plt.rcParams['font.sans-serif'] = ['Arial']  # O cualquier fuente que prefieras
+
+# Crear la figura y los ejes
+fig, ax = plt.subplots(figsize=(15, 7), dpi=120) #editar tamaño del plot (está en gran tamaño para html)
+
+# cambiar fondo del plot
+#fig.patch.set_facecolor('#F5F5F5')  # Fondo exterior (alrededor del gráfico)
+#ax.set_facecolor('#F5F5F5')         # Fondo interior del gráfico
+
+# Crear la gráfica de barras
+sns.barplot(
+    y="Paises",
+    x="Contagiados",
+    data=df,
+    color="r",
+    alpha=0.8,
+    ax=ax
+)
+
+# Configurar límites y etiquetas de los ejes
+ax.set_xlim(0, 10.4)
+ax.set_xlabel("Millones de contagios", fontsize=14, color='#4D4D4D')
+ax.set_ylabel("", fontsize=0)
+
+# Ajustar el tamaño y color de las etiquetas del eje x e y
+ax.tick_params(axis='y', labelsize=14, colors='#4D4D4D')
+ax.tick_params(axis='x', labelsize=14, colors='#4D4D4D')
+
+
+# Eliminar ehes específicas
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# cambiar de color ejes específicas
+ax.spines['bottom'].set_color('#4D4D4D') 
+ax.spines['left'].set_color('#4D4D4D') 
+
+# Añadir etiquetas de valor a cada barra dentro de la barra al final
+for patch in ax.patches:
+    width = patch.get_width()
+    y = patch.get_y() + patch.get_height() / 2
+    
+    # Convertir el número a string con coma como separador decimal
+    formatted_width = f'{width:.1f}'.replace('.', ',')
+    # Posicionar el texto ligeramente dentro de la barra
+    ax.text(
+        width - 0.1,  # Desplazamiento hacia la izquierda para estar dentro
+        y,
+        f'{formatted_width} M',  # Usar el valor con coma
+        ha='right',  # Alinear el texto a la derecha para que quede al final
+        va='center',
+        color="white",
+        fontweight='bold',
+        fontsize=12
+    )
+
+# Añadir título principal
+plt.suptitle(
+    'Total de contagios por país',
+    y=0.98,
+    horizontalalignment='left',
+    x=0.01,
+    fontsize=24,
+    fontweight="bold",
+    color='#4D4D4D'
+)
+
+# Añadir texto adicional con la suma total de contagiados
+ax.text(
+    7, 19,
+    f'Total de contagios: {int(x):,}'.replace(',', '.'),
+    color='grey',
+    fontsize=20,
+    fontweight='bold'
+)
+
+
+plt.tight_layout() #para ajustar el plot opupar el espacio
+
+plt.show()
+```

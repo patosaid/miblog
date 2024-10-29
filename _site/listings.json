@@ -9,6 +9,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/python-plot-1/index.html",
       "/posts/tablas-estadisticas/index.html",
       "/posts/comunas-chile/index.html",
       "/posts/post-with-code/index.html",
