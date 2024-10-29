@@ -9,7 +9,6 @@ website:
   title: "Patricio Said"
   description: "blog de Patricio Said (Patosaid), ciencia de datos, R Python programacion, gráficas, plots, dashboard"
   favicon: logo.png
-  margin-footer: "Creado por Pato Said con Quarto, 2024"
   navbar:
     logo: logo.png
     right:
