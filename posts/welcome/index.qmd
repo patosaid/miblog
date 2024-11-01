@@ -4,15 +4,19 @@ lang: es
 author: "Patricio Said"
 date: "2019-09-19"
 categories: [r , recursos]
+description: "Recursos de R , libros, cheatsheets, blogs, artículos, librerías."
+format:
+  html:
+    toc: true
 ---
 
 Hola, este es mi primer post :)
 
 ![](thumbnail.jpg)
 
-Este post tiene el objetivo de guardar y mostrar ordenadamente las fuentes de recursos que todo principiante en el mundo de R debiese conocer. Obviamente no nombraré todos los paquetes o libros que existen en torno a R, pero si los lugares donde dar los primeros pasos.
+Este post tiene el objetivo de guardar y mostrar ordenadamente recursos que todo principiante en el mundo de R debiese conocer.
 
-Este compilado está inspirado en <https://awesome-r.com/> (revísalo).
+Este compilado está inspirado en <https://github.com/qinwf/awesome-R> (revísalo).
 
 ## Instalar R
 
@@ -21,7 +25,7 @@ Este compilado está inspirado en <https://awesome-r.com/> (revísalo).
 -   R (base): <https://cran.rstudio.com/>
 -   RStudio: <https://www.rstudio.com/products/rstudio/download/>
 
-## Paquetes 
+## Paquetes
 
 -   Luego de la instalación de R, [knitr](https://github.com/yihui/knitr) y [rmarkdown](https://rmarkdown.rstudio.com/) te ayudan a la generenación de documentos dinámicos.
 -   [tidyverse](https://www.tidyverse.org/), contenedor de varios paquetes, estos son algunos:
@@ -44,7 +48,7 @@ Este compilado está inspirado en <https://awesome-r.com/> (revísalo).
 
 Los paquetes nombrados son los más básicos y con ellos se pueden hacer muchas cosas. Revisa [Awesome-R](https://awesome-r.com/), hay paquetes para todo... conectarse a bases de datos, API's para extraer datos de páginas webs, optimización de problemas no lineales, análisis de datos espaciales, machine learning etc.
 
-## Libros  
+## Libros
 
 -   [R for Data Science](https://r4ds.had.co.nz/) (empeza por este!, lo están traduciendo al español: <https://es.r4ds.hadley.nz/>)
 -   [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf)
@@ -68,7 +72,7 @@ Los paquetes nombrados son los más básicos y con ellos se pueden hacer muchas 
 -   [Ciencia de Datos para Gente Sociable](https://bitsandbricks.github.io/ciencia_de_datos_gente_sociable/) *R en ciencias sociales*
 -   [Statistical Inference via Data Science](https://moderndive.com/)
 
-## Cheat Sheets 
+## Cheat Sheets
 
 *(Las chuletas o torpedos, resúmenes con las funciones más importantes de algunos paquetes, ver <https://www.rstudio.com/resources/cheatsheets/>)*
 
@@ -82,7 +86,7 @@ Los paquetes nombrados son los más básicos y con ellos se pueden hacer muchas 
 -   [Ciencia de datos en R con sparklyr](https://resources.rstudio.com/spanish-pdfs/sparklyrspanish)
 -   [Repo de cheatsheets](https://github.com/rstudio/cheatsheets)
 
-# La comunidad de R 
+# La comunidad de R
 
 Este punto no es una herramienta pero es importante mencionarla. Como sabemos, R es un lenguaje de programación con un enfoque al análisis estadístico y los paquetes que usamos estan desarrollados por diferentes usuarios de R que comparten sus aportes. Justamente este es un aspecto fuerte de R, su gran comunidad, por eso es importante conocerla, participar y estar al tanto de todas las novedades. Aquí te dejo algunos enlaces:
 

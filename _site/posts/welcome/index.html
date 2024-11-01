@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Patricio Said">
+<meta name="description" content="Recursos de R , libros, cheatsheets, blogs, artículos, librerías.">
 
 <title>Hola mundo, mi primer post - material R – Patricio Said</title>
 <style>
@@ -31,6 +32,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<link href="../../logo.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -67,18 +69,48 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Buscar"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id={{ env.GA_TRACKING_ID }}"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '{{ env.GA_TRACKING_ID }}', { 'anonymize_ip': true});
+</script>
+<script defer="" src="https://cloud.umami.is/script.js" data-website-id="5522310f-40f9-4b16-95c7-3fade500bc5b"></script>
+<!-- Google tag (gtag.js) -->
+
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-BLQTXRXFMQ"></script>
+
+<script>
+
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag(){dataLayer.push(arguments);}
+
+  gtag('js', new Date());
+
+
+
+  gtag('config', 'G-BLQTXRXFMQ');
+
+</script>
 
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.png" alt="" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Patricio Said</span>
     </a>
@@ -110,7 +142,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Hola mundo, mi primer post - material R</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          Recursos de R , libros, cheatsheets, blogs, artículos, librerías.
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">r</div>
                 <div class="quarto-category">recursos</div>
               </div>
@@ -141,7 +178,26 @@ ul.task-list li input[type="checkbox"] {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#instalar-r" id="toc-instalar-r" class="nav-link active" data-scroll-target="#instalar-r">Instalar R</a></li>
+  <li><a href="#paquetes" id="toc-paquetes" class="nav-link" data-scroll-target="#paquetes">Paquetes</a></li>
+  <li><a href="#libros" id="toc-libros" class="nav-link" data-scroll-target="#libros">Libros</a>
+  <ul class="collapse">
+  <li><a href="#otros-libros-de-interés" id="toc-otros-libros-de-interés" class="nav-link" data-scroll-target="#otros-libros-de-interés">Otros libros de interés:</a></li>
+  </ul></li>
+  <li><a href="#cheat-sheets" id="toc-cheat-sheets" class="nav-link" data-scroll-target="#cheat-sheets">Cheat Sheets</a></li>
+  <li><a href="#la-comunidad-de-r" id="toc-la-comunidad-de-r" class="nav-link" data-scroll-target="#la-comunidad-de-r">La comunidad de R</a>
+  <ul class="collapse">
+  <li><a href="#r-en-twitter" id="toc-r-en-twitter" class="nav-link" data-scroll-target="#r-en-twitter">R en Twitter</a></li>
+  <li><a href="#nota-actualizar" id="toc-nota-actualizar" class="nav-link" data-scroll-target="#nota-actualizar">Nota: Actualizar</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -151,8 +207,8 @@ ul.task-list li input[type="checkbox"] {
 
 <p>Hola, este es mi primer post :)</p>
 <p><img src="thumbnail.jpg" class="img-fluid"></p>
-<p>Este post tiene el objetivo de guardar y mostrar ordenadamente las fuentes de recursos que todo principiante en el mundo de R debiese conocer. Obviamente no nombraré todos los paquetes o libros que existen en torno a R, pero si los lugares donde dar los primeros pasos.</p>
-<p>Este compilado está inspirado en <a href="https://awesome-r.com/" class="uri">https://awesome-r.com/</a> (revísalo).</p>
+<p>Este post tiene el objetivo de guardar y mostrar ordenadamente recursos que todo principiante en el mundo de R debiese conocer.</p>
+<p>Este compilado está inspirado en <a href="https://github.com/qinwf/awesome-R" class="uri">https://github.com/qinwf/awesome-R</a> (revísalo).</p>
 <section id="instalar-r" class="level2">
 <h2 class="anchored" data-anchor-id="instalar-r">Instalar R</h2>
 <p><em>(No está de más decir que se debe instalar R desde páginas oficiales)</em></p>

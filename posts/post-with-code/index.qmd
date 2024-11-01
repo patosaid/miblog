@@ -8,7 +8,7 @@ categories: ["ggplot2","mapa" , "r"]
 description: ""
 ---
 
-![](mapa.png){fig-align="center"}
+![](mapa.png){fig-align="center" width="308"}
 
 Es común mostrar dentro de la metodología de un trabajo el área geográfica de donde se realizó el estudio. Si no estas familiarizado con datos espaciales, aquí te muestro una alternativa de cómo mostrar la zona de estudio (en lugar de ir a GoogleMaps y sacar una screenshot).
 
